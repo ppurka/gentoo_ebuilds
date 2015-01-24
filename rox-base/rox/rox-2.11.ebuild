@@ -1,4 +1,4 @@
-# Copyright 2000-2015 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header:
 
@@ -29,55 +29,55 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	pushd "${S}/ROX-Filer"
-	mkdir -p build
-	sed -i 's:g_strdup(getenv("APP_DIR")):"/usr/share/rox":' src/main.c
-	popd
+	cd ROX-Filer
+	mkdir build
+	sed -i 's:g_strdup(getenv("APP_DIR")):"/usr/share/rox":' src/main.c || die "prepare failed"
 }
 
 src_configure() {
-	pushd "${S}/ROX-Filer/build"
-	../src/configure --prefix=/usr LIBS="-lm -ldl" || die "Configure failed"
+	cd ROX-Filer
+	pushd build
+		../src/configure --prefix=/usr LIBS="-lm -ldl" || die "configure failed"
 	popd
 }
 
 src_compile() {
-	pushd "${S}/ROX-Filer/build"
+	cd ROX-Filer
+	pushd build
 	make || die "make failed"
 	popd
 }
 
 src_install() {
-  pushd   "${S}/ROX-Filer"
-  dodir /usr/share/applications  /usr/share/pixmaps  /usr/share/rox/Help
-  insinto /usr/share/rox
-  doins -r Messages Options.xml ROX images style.css .DirIcon Templates.ui
-  insinto /usr/share/rox/Help
-  doins Help/*.html Help/README*
+	cd ROX-Filer 
+	dodir /usr/share/applications  /usr/share/pixmaps  /usr/share/rox/Help
+	insinto /usr/share/rox
+	doins -r Messages Options.xml ROX images style.css .DirIcon Templates.ui
+	insinto /usr/share/rox/Help
+	doins Help/*.html Help/README* 
 
-  doman ../rox.1
+	doman ../rox.1
 
-  newbin ROX-Filer rox
+	newbin ROX-Filer rox
 
-  pushd ${D}/usr/share/rox/ROX/MIME || die "MIME directory missing"
-  ln -sv text-x-{diff,patch}.png                       &&
-  ln -sv application-x-font-{afm,type1}.png            &&
-  ln -sv application-xml{,-dtd}.png                    &&
-  ln -sv application-xml{,-external-parsed-entity}.png &&
-  ln -sv application-{,rdf+}xml.png                    &&
-  ln -sv application-x{ml,-xbel}.png                   &&
-  ln -sv application-{x-shell,java}script.png          &&
-  ln -sv application-x-{bzip,xz}-compressed-tar.png    &&
-  ln -sv application-x-{bzip,lzma}-compressed-tar.png  &&
-  ln -sv application-x-{bzip-compressed-tar,lzo}.png   &&
-  ln -sv application-x-{bzip,xz}.png                   &&
-  ln -sv application-x-{gzip,lzma}.png                 &&
-  ln -sv application-{msword,rtf}.png || die "symlinking failed"
-  popd
+	cd ${D}/usr/share/rox/ROX/MIME || die "MIME directory missing"
+	ln -sv text-x-{diff,patch}.png                       &&
+	ln -sv application-x-font-{afm,type1}.png			 &&
+	ln -sv application-xml{,-dtd}.png					 &&
+	ln -sv application-xml{,-external-parsed-entity}.png &&
+	ln -sv application-{,rdf+}xml.png					 &&
+	ln -sv application-x{ml,-xbel}.png					 &&
+	ln -sv application-{x-shell,java}script.png			 &&
+	ln -sv application-x-{bzip,xz}-compressed-tar.png	 &&
+	ln -sv application-x-{bzip,lzma}-compressed-tar.png  &&
+	ln -sv application-x-{bzip-compressed-tar,lzo}.png	 &&
+	ln -sv application-x-{bzip,xz}.png					 &&
+	ln -sv application-x-{gzip,lzma}.png				 &&
+	ln -sv application-{msword,rtf}.png || die "symlinking failed"
 
-  dosym /usr/share/rox/.DirIcon /usr/share/pixmaps/rox.png
+	dosym /usr/share/rox/.DirIcon /usr/share/pixmaps/rox.png
 
-  cat > ${D}/usr/share/applications/rox.desktop <<HERE_DOC
+	cat > ${D}/usr/share/applications/rox.desktop <<HERE_DOC
 [Desktop Entry]
 Encoding=UTF-8
 Type=Application
@@ -89,5 +89,4 @@ Categories=GTK;Utility;System;Core;
 StartupNotify=true
 Terminal=false
 HERE_DOC
-  popd
 }
