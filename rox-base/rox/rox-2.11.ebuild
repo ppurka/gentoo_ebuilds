@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="alpha amd64 arm ia64 ~mips ppc ppc64 sparc x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~x86-solaris"
 IUSE=""
 
-COMMON_DEPEND="
+COMMON_DEPEND="dev-lang/perl
 	dev-libs/libxml2:2
 	gnome-base/libglade:2.0
 	x11-libs/gtk+:2"
